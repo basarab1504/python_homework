@@ -2,7 +2,12 @@ import table
 import categorizer
 import cx_Oracle
 import json
+import os
 
+path = '.\\credentials.json'
+
+if not os.path.isfile(".\\credentials.json"):
+    path = input("Отсутствует файл конфигурации логина/пароля\nУкажите путь до файла конфигурации: ")
 
 credentials = json.load(open(input("Путь до файла конфигурации")))
 
