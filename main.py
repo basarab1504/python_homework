@@ -4,17 +4,9 @@ import cx_Oracle
 import json
 import os
 
-path = '.\\credentials.json'
-
-if not os.path.isfile(".\\credentials.json"):
-    path = input("Отсутствует файл конфигурации логина/пароля\nУкажите путь до файла конфигурации: ")
-
-credentials = json.load(open(input("Путь до файла конфигурации")))
-
-cx_Oracle.init_oracle_client(credentials["client"])
-
-def clear():
-    conn = cx_Oracle.connect(credentials["login"], credentials["password"], credentials["host"], encoding="UTF-8")
+def clear(credentials):
+    conn = cx_Oracle.connect(
+        credentials["login"], credentials["password"], credentials["host"], encoding="UTF-8")
     cur = conn.cursor()
     cur.execute("drop table petrushin_test")
 
@@ -38,20 +30,34 @@ def clear():
     ])
     conn.commit()
 
+def main():
+    path = '.\\credentials.json'
 
-clear()
+    if not os.path.isfile(".\\credentials.json"):
+        print("Отсутствует файл конфигурации логина/пароля. Поместите файл credentials.json в папку со скриптом")
+        return
 
-c = categorizer.categorizer()
+    credentials = json.load(open(path))
 
-t1 = table.oracle_table(credentials["login"], credentials["password"], credentials["host"], "petrushin_test")
-t2 = table.oracle_table(credentials["login"], credentials["password"], credentials["host"], "petrushin_test_csv")
+    cx_Oracle.init_oracle_client(credentials["client"])
 
-t1.categories = c.get_category(t1.get_data())
-t2.categories = c.get_category(t2.get_data())
+    clear(credentials)
 
-print("Данные petrushin_test до обогащения")
-print(t1.get_data())
-print("=======")
-print("Данные petrushin_test после обогащения")
-t1.update_from_table(t2)
-print(t1.get_data())
+    c = categorizer.categorizer()
+
+    t1 = table.oracle_table(
+        credentials["login"], credentials["password"], credentials["host"], "petrushin_test")
+    t2 = table.oracle_table(
+        credentials["login"], credentials["password"], credentials["host"], "petrushin_test_csv")
+
+    t1.categories = c.get_category(t1.get_data())
+    t2.categories = c.get_category(t2.get_data())
+
+    print("Данные petrushin_test до обогащения")
+    print(t1.get_data())
+    print("=======")
+    print("Данные petrushin_test после обогащения")
+    t1.update_from_table(t2)
+    print(t1.get_data())
+
+main()
