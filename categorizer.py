@@ -8,14 +8,16 @@ class categorizer:
 			"phone_number": r'^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$',
             "post_index": r'\d{6}',
             "email": r'\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b',
-            "website": r"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$"
+            "website": r"^(https?:\/\/)?(www\.)?([a-zA-Z0-9]+(-?[a-zA-Z0-9])*\.)+[\w]{2,}(\/\S*)?$"
         }
 
     def get_category(self, data):
         categorized = {}
 
         for d in data.items():
-            categorized[self.define_category(d[1])] = d[0]
+            cat = self.define_category(d[1])
+            if cat:
+                categorized[self.define_category(d[1])] = d[0]
 
         return categorized
 

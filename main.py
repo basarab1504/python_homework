@@ -25,7 +25,7 @@ def clear(credentials):
         ("Филимошин Роман Владимирович", "+7 (495) 913-09-65",
          "4025062831", None, "Mail@service-nalog.ru"),
         ("Мелешкин Михаил Федорович", None,
-         "+7707288107", "127381", "prodez@mail.ru"),
+         "7707288107", "127381", "prodez@mail.ru"),
         ("Мурашов Сергей Борисович", "+7 (812) 492-20-58", "7814001461", None, None)
     ])
     conn.commit()
@@ -53,6 +53,8 @@ def main():
     t1.categories = c.get_category(t1.get_data())
     t2.categories = c.get_category(t2.get_data())
 
+    print(t2.get_data())
+    print("=======")
     print("Данные petrushin_test до обогащения")
     print(t1.get_data())
     print("=======")
