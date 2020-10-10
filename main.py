@@ -37,6 +37,8 @@ def main():
         print("Отсутствует файл конфигурации логина/пароля. Поместите файл credentials.json в папку со скриптом")
         return
 
+    csv = r"C:\\oracle\\python_homework\\data.csv"
+
     credentials = json.load(open(path))
 
     cx_Oracle.init_oracle_client(credentials["client"])
@@ -45,21 +47,21 @@ def main():
 
     c = categorizer.categorizer()
 
-    t1 = table.oracle_table(
-        credentials["login"], credentials["password"], credentials["host"], "petrushin_test")
-    t2 = table.oracle_table(
-        credentials["login"], credentials["password"], credentials["host"], "petrushin_test_csv")
+    csv_table = table.csv_table(csv)
+    table_name = "petrushin_test"
+    oracle_table = table.oracle_table(credentials["login"], credentials["password"], credentials["host"], table_name)
 
-    t1.categories = c.get_category(t1.get_data())
-    t2.categories = c.get_category(t2.get_data())
+    oracle_table.categories = c.get_category(oracle_table.get_data())
+    csv_table.categories = c.get_category(csv_table.get_data())
 
-    print(t2.get_data())
+
+    print(csv_table.get_data())
     print("=======")
     print("Данные petrushin_test до обогащения")
-    print(t1.get_data())
+    print(oracle_table.get_data())
     print("=======")
     print("Данные petrushin_test после обогащения")
-    t1.update_from_table(t2)
-    print(t1.get_data())
+    oracle_table.update_from_table(csv_table)
+    print(oracle_table.get_data())
 
 main()
